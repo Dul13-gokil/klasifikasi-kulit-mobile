@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../i18n/app_strings.dart';
 import '../theme/app_colors.dart';
 
@@ -13,8 +14,8 @@ class SkinClassMeta {
     required String name,
     required String shortName,
     required this.color,
-  })  : _idName = name,
-        _idShortName = shortName;
+  }) : _idName = name,
+       _idShortName = shortName;
 
   String get name => AppStrings.localizeClassName(id, _idName);
   String get shortName => AppStrings.localizeShortClassName(id, _idShortName);

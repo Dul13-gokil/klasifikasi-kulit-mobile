@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../core/constants/skin_classes.dart';
 import '../../core/i18n/app_strings.dart';
 import '../../core/theme/app_colors.dart';
@@ -51,8 +52,9 @@ class _MainShellState extends State<MainShell> {
           return Container(
             decoration: BoxDecoration(
               color: AppColors.bgCard,
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
             ),
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
             child: SingleChildScrollView(
@@ -285,9 +287,7 @@ class _MainShellState extends State<MainShell> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(ctx).viewInsets.bottom,
-        ),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
         child: Container(
           decoration: BoxDecoration(
             color: AppColors.bgCard,
@@ -370,8 +370,9 @@ class _MainShellState extends State<MainShell> {
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.accent,
-                    foregroundColor:
-                        AppColors.isDark ? const Color(0xFF090D16) : Colors.white,
+                    foregroundColor: AppColors.isDark
+                        ? const Color(0xFF090D16)
+                        : Colors.white,
                   ),
                   onPressed: () async {
                     await widget.scanViewModel.updateServerUrl(controller.text);
@@ -412,8 +413,9 @@ class _MainShellState extends State<MainShell> {
           if (showEval) 'eval',
           if (showDataset) 'dataset',
         ];
-        final activeKey =
-            pageKeys.contains(_activePageKey) ? _activePageKey : 'scan';
+        final activeKey = pageKeys.contains(_activePageKey)
+            ? _activePageKey
+            : 'scan';
         final currentIdx = pageKeys.indexOf(activeKey);
 
         final pages = <Widget>[
@@ -438,10 +440,7 @@ class _MainShellState extends State<MainShell> {
         final destinations = <NavigationDestination>[
           NavigationDestination(
             icon: const Icon(LucideIcons.scanFace),
-            selectedIcon: Icon(
-              LucideIcons.scanFace,
-              color: AppColors.accent,
-            ),
+            selectedIcon: Icon(LucideIcons.scanFace, color: AppColors.accent),
             label: AppStrings.tr('Pindai Wajah', 'Face Scan'),
           ),
           if (showHistory)
@@ -454,20 +453,14 @@ class _MainShellState extends State<MainShell> {
               selectedIcon: Badge(
                 isLabelVisible: historyCount > 0,
                 label: Text('$historyCount'),
-                child: Icon(
-                  LucideIcons.history,
-                  color: AppColors.accent,
-                ),
+                child: Icon(LucideIcons.history, color: AppColors.accent),
               ),
               label: AppStrings.tr('Riwayat Scan', 'Scan History'),
             ),
           if (showEval)
             NavigationDestination(
               icon: const Icon(LucideIcons.grid),
-              selectedIcon: Icon(
-                LucideIcons.grid,
-                color: AppColors.accent,
-              ),
+              selectedIcon: Icon(LucideIcons.grid, color: AppColors.accent),
               label: AppStrings.tr('Matriks & Evaluasi', 'Matrix & Eval'),
             ),
           if (showDataset)
@@ -480,10 +473,7 @@ class _MainShellState extends State<MainShell> {
               selectedIcon: Badge(
                 isLabelVisible: count > 0,
                 label: Text('$count'),
-                child: Icon(
-                  LucideIcons.database,
-                  color: AppColors.accent,
-                ),
+                child: Icon(LucideIcons.database, color: AppColors.accent),
               ),
               label: AppStrings.tr('Dataset Uji', 'Test Dataset'),
             ),
@@ -532,7 +522,10 @@ class _MainShellState extends State<MainShell> {
             actions: [
               // Tombol Switch Bahasa (ID / EN) untuk Jurnal
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 2),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 11,
+                  horizontal: 2,
+                ),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(8),
                   onTap: () => widget.scanViewModel.toggleLanguage(),
@@ -602,8 +595,9 @@ class _MainShellState extends State<MainShell> {
                       vertical: 5,
                     ),
                     decoration: BoxDecoration(
-                      color:
-                          online ? AppColors.successSoft : AppColors.dangerSoft,
+                      color: online
+                          ? AppColors.successSoft
+                          : AppColors.dangerSoft,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
                         color: online
@@ -618,16 +612,15 @@ class _MainShellState extends State<MainShell> {
                           width: 6.5,
                           height: 6.5,
                           decoration: BoxDecoration(
-                            color:
-                                online ? AppColors.success : AppColors.danger,
+                            color: online
+                                ? AppColors.success
+                                : AppColors.danger,
                             shape: BoxShape.circle,
                           ),
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          online
-                              ? AppStrings.tr('Aktif', 'Online')
-                              : 'Server',
+                          online ? AppStrings.tr('Aktif', 'Online') : 'Server',
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w700,
