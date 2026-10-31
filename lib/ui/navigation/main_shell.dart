@@ -338,7 +338,7 @@ class _MainShellState extends State<MainShell> {
                 runSpacing: 8,
                 children: [
                   ActionChip(
-                    avatar: const Icon(LucideIcons.globe, size: 15),
+                    avatar: const Icon(Icons.language, size: 15),
                     label: const Text('Online Global (ts.net)'),
                     onPressed: () {
                       controller.text = AppConfig.defaultTailscaleServerUrl;
