@@ -132,10 +132,15 @@ class SkinRepository {
     try {
       final prefs = await SharedPreferences.getInstance();
       final saved = prefs.getString(_prefServerUrlKey);
-      if (saved != null && saved.trim().isNotEmpty) {
+      // Jika tersimpan URL privat lama (100.86.30.42 atau 127.0.0.1), otomatis migrasi ke URL online permanen
+      if (saved != null &&
+          saved.trim().isNotEmpty &&
+          !saved.contains('100.86.30.42') &&
+          !saved.contains('127.0.0.1')) {
         _apiService.updateBaseUrl(saved.trim());
       } else {
         _apiService.updateBaseUrl(AppConfig.defaultTailscaleServerUrl);
+        await prefs.setString(_prefServerUrlKey, AppConfig.defaultTailscaleServerUrl);
       }
     } catch (_) {
       _apiService.updateBaseUrl(AppConfig.defaultTailscaleServerUrl);
