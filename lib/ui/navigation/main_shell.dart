@@ -327,33 +327,109 @@ class _MainShellState extends State<MainShell> {
               ),
               const SizedBox(height: 6),
               Text(
-                'Pilih preset server online atau jaringan lokal:',
+                'Pilih server untuk menghubungkan aplikasi ke AI:',
                 style: TextStyle(fontSize: 12, color: AppColors.textMuted),
               ),
               const SizedBox(height: 12),
 
-              // Tombol Preset Cepat Tailscale Funnel vs Direct vs ADB Tunnel
+              // Kartu Tombol Server Online Global (Satu Klik Langsung Tersambung)
+              InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: () async {
+                  controller.text = AppConfig.defaultTailscaleServerUrl;
+                  await widget.scanViewModel.updateServerUrl(AppConfig.defaultTailscaleServerUrl);
+                  await widget.datasetViewModel.refreshDataset();
+                  if (ctx.mounted) Navigator.of(ctx).pop();
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: AppColors.accent.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.accent, width: 1.5),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.accent,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(LucideIcons.globe, size: 18, color: Colors.white),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Row(
+                              children: [
+                                Text(
+                                  'Server Online Global',
+                                  style: TextStyle(
+                                    fontSize: 13.5,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                SizedBox(width: 6),
+                                Text(
+                                  '(Rekomendasi)',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              AppConfig.defaultTailscaleServerUrl,
+                              style: TextStyle(
+                                fontSize: 11.5,
+                                fontFamily: 'monospace',
+                                color: AppColors.textMuted,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Bisa dari HP manapun & kuota data tanpa VPN',
+                              style: TextStyle(
+                                fontSize: 10.5,
+                                color: AppColors.textMuted,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(LucideIcons.chevronRight, size: 18),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              Text(
+                'Atau opsi cadangan (jaringan lokal / kabel):',
+                style: TextStyle(fontSize: 11.5, color: AppColors.textMuted),
+              ),
+              const SizedBox(height: 8),
+
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: [
                   ActionChip(
-                    avatar: const Icon(Icons.language, size: 15),
-                    label: const Text('Online Global (ts.net)'),
-                    onPressed: () {
-                      controller.text = AppConfig.defaultTailscaleServerUrl;
-                    },
-                  ),
-                  ActionChip(
-                    avatar: const Icon(LucideIcons.shieldCheck, size: 15),
+                    avatar: const Icon(LucideIcons.shieldCheck, size: 14),
                     label: const Text('Direct (100.86.30.42)'),
                     onPressed: () {
                       controller.text = AppConfig.directTailscaleServerUrl;
                     },
                   ),
                   ActionChip(
-                    avatar: const Icon(LucideIcons.usb, size: 15),
-                    label: const Text('ADB Tunnel (127.0.0.1)'),
+                    avatar: const Icon(LucideIcons.usb, size: 14),
+                    label: const Text('ADB USB (127.0.0.1)'),
                     onPressed: () {
                       controller.text = AppConfig.adbReverseServerUrl;
                     },
