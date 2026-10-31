@@ -327,26 +327,33 @@ class _MainShellState extends State<MainShell> {
               ),
               const SizedBox(height: 6),
               Text(
-                'Pilih preset jaringan Tailscale (dul-1378) atau ADB Reverse TCP/IP 5555:',
+                'Pilih preset server online atau jaringan lokal:',
                 style: TextStyle(fontSize: 12, color: AppColors.textMuted),
               ),
               const SizedBox(height: 12),
 
-              // Tombol Preset Cepat Tailscale vs ADB Tunnel
+              // Tombol Preset Cepat Tailscale Funnel vs Direct vs ADB Tunnel
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: [
                   ActionChip(
-                    avatar: const Icon(LucideIcons.shieldCheck, size: 15),
-                    label: const Text('Tailscale (100.86.30.42:5000)'),
+                    avatar: const Icon(LucideIcons.globe, size: 15),
+                    label: const Text('Online Global (ts.net)'),
                     onPressed: () {
                       controller.text = AppConfig.defaultTailscaleServerUrl;
                     },
                   ),
                   ActionChip(
+                    avatar: const Icon(LucideIcons.shieldCheck, size: 15),
+                    label: const Text('Direct (100.86.30.42)'),
+                    onPressed: () {
+                      controller.text = AppConfig.directTailscaleServerUrl;
+                    },
+                  ),
+                  ActionChip(
                     avatar: const Icon(LucideIcons.usb, size: 15),
-                    label: const Text('ADB Tunnel (127.0.0.1:5000)'),
+                    label: const Text('ADB Tunnel (127.0.0.1)'),
                     onPressed: () {
                       controller.text = AppConfig.adbReverseServerUrl;
                     },
@@ -360,7 +367,7 @@ class _MainShellState extends State<MainShell> {
                 style: AppTheme.mono(fontSize: 13),
                 decoration: const InputDecoration(
                   labelText: 'Alamat URL Server Flask',
-                  hintText: 'http://100.86.30.42:5000',
+                  hintText: 'https://dul-1378.tail09bd7a.ts.net',
                 ),
               ),
               const SizedBox(height: 16),

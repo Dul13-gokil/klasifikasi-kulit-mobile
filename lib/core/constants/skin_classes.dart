@@ -24,8 +24,11 @@ class SkinClassMeta {
 class AppConfig {
   AppConfig._();
 
-  /// IP Tailscale Laptop Server (dul-1378) sesuai konsol Tailscale pengguna
-  static const String defaultTailscaleServerUrl = 'http://100.86.30.42:5000';
+  /// URL Tailscale Funnel Publik Resmi (bisa diakses di HP manapun tanpa Tailscale / beda jaringan)
+  static const String defaultTailscaleServerUrl = 'https://dul-1378.tail09bd7a.ts.net';
+
+  /// IP Tailscale Direct Laptop (jika berada dalam tailnet yang sama)
+  static const String directTailscaleServerUrl = 'http://100.86.30.42:5000';
 
   /// Opsi cadangan jika menggunakan ADB Reverse TCP/IP 5555 (usb/wireless tunnel)
   static const String adbReverseServerUrl = 'http://127.0.0.1:5000';
