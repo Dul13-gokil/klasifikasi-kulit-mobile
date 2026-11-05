@@ -132,18 +132,19 @@ class SkinRepository {
     try {
       final prefs = await SharedPreferences.getInstance();
       final saved = prefs.getString(_prefServerUrlKey);
-      // Jika tersimpan URL privat lama (100.86.30.42 atau 127.0.0.1), otomatis migrasi ke URL online permanen
+      // Jika belum disetel atau masih tersimpan URL server lama, migrasi otomatis ke URL Railway Cloud
       if (saved != null &&
           saved.trim().isNotEmpty &&
           !saved.contains('100.86.30.42') &&
-          !saved.contains('127.0.0.1')) {
+          !saved.contains('127.0.0.1') &&
+          !saved.contains('ts.net')) {
         _apiService.updateBaseUrl(saved.trim());
       } else {
-        _apiService.updateBaseUrl(AppConfig.defaultTailscaleServerUrl);
-        await prefs.setString(_prefServerUrlKey, AppConfig.defaultTailscaleServerUrl);
+        _apiService.updateBaseUrl(AppConfig.defaultServerUrl);
+        await prefs.setString(_prefServerUrlKey, AppConfig.defaultServerUrl);
       }
     } catch (_) {
-      _apiService.updateBaseUrl(AppConfig.defaultTailscaleServerUrl);
+      _apiService.updateBaseUrl(AppConfig.defaultServerUrl);
     }
   }
 

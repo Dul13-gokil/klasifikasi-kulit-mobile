@@ -27,7 +27,7 @@ class ApiService {
 
   ApiService({http.Client? client, String? baseUrl})
       : _client = client ?? http.Client(),
-        _baseUrl = (baseUrl ?? AppConfig.defaultTailscaleServerUrl)
+        _baseUrl = (baseUrl ?? AppConfig.defaultServerUrl)
             .replaceAll(RegExp(r'/$'), '');
 
   String get baseUrl => _baseUrl;

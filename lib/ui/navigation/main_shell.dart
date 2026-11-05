@@ -344,7 +344,7 @@ class _MainShellState extends State<MainShell> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                   decoration: BoxDecoration(
-                    color: AppColors.accent.withOpacity(0.12),
+                    color: AppColors.accent.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: AppColors.accent, width: 1.5),
                   ),
@@ -356,7 +356,7 @@ class _MainShellState extends State<MainShell> {
                           color: AppColors.accent,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(LucideIcons.globe, size: 18, color: Colors.white),
+                        child: const Icon(Icons.public, size: 18, color: Colors.white),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -403,7 +403,7 @@ class _MainShellState extends State<MainShell> {
                           ],
                         ),
                       ),
-                      const Icon(LucideIcons.chevronRight, size: 18),
+                      const Icon(Icons.chevron_right, size: 18),
                     ],
                   ),
                 ),
@@ -421,14 +421,21 @@ class _MainShellState extends State<MainShell> {
                 runSpacing: 8,
                 children: [
                   ActionChip(
-                    avatar: const Icon(LucideIcons.shieldCheck, size: 14),
+                    avatar: const Icon(Icons.public, size: 14),
+                    label: const Text('Tailscale Laptop'),
+                    onPressed: () {
+                      controller.text = AppConfig.defaultTailscaleServerUrl;
+                    },
+                  ),
+                  ActionChip(
+                    avatar: const Icon(Icons.security, size: 14),
                     label: const Text('Direct (100.86.30.42)'),
                     onPressed: () {
                       controller.text = AppConfig.directTailscaleServerUrl;
                     },
                   ),
                   ActionChip(
-                    avatar: const Icon(LucideIcons.usb, size: 14),
+                    avatar: const Icon(Icons.usb, size: 14),
                     label: const Text('ADB USB (127.0.0.1)'),
                     onPressed: () {
                       controller.text = AppConfig.adbReverseServerUrl;
@@ -443,7 +450,7 @@ class _MainShellState extends State<MainShell> {
                 style: AppTheme.mono(fontSize: 13),
                 decoration: const InputDecoration(
                   labelText: 'Alamat URL Server Flask',
-                  hintText: 'https://dul-1378.tail09bd7a.ts.net',
+                  hintText: 'https://klasifikasi-kulit-website-production.up.railway.app',
                 ),
               ),
               const SizedBox(height: 16),

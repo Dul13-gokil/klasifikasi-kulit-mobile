@@ -24,7 +24,13 @@ class SkinClassMeta {
 class AppConfig {
   AppConfig._();
 
-  /// URL Tailscale Funnel Publik Resmi (bisa diakses di HP manapun tanpa Tailscale / beda jaringan)
+  /// URL Cloud Railway Publik Resmi (Online 24/7 tanpa perlu laptop menyala)
+  static const String defaultRailwayServerUrl = 'https://klasifikasi-kulit-website-production.up.railway.app';
+
+  /// URL Default Server API Mobile Utama
+  static const String defaultServerUrl = defaultRailwayServerUrl;
+
+  /// URL Tailscale Funnel Publik Resmi (Cadangan Server Laptop)
   static const String defaultTailscaleServerUrl = 'https://dul-1378.tail09bd7a.ts.net';
 
   /// IP Tailscale Direct Laptop (jika berada dalam tailnet yang sama)
