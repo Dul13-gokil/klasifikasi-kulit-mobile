@@ -622,6 +622,7 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
         final contH = constraints.maxHeight;
 
         Widget? boxWidget;
+        Widget? labelWidget;
         if (pred != null &&
             pred.faceDetected &&
             pred.faceBox != null &&
@@ -650,32 +651,28 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
                 border: Border.all(color: const Color(0xFF22C55E), width: 2),
                 borderRadius: BorderRadius.circular(4),
               ),
-              alignment: Alignment.topLeft,
-              child: Transform.translate(
-                offset: const Offset(0, -20),
-                child: OverflowBox(
-                  maxWidth: 160,
-                  maxHeight: 24,
-                  alignment: Alignment.bottomLeft,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF22C55E),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Text(
-                      'Area Wajah',
-                      maxLines: 1,
-                      softWrap: false,
-                      overflow: TextOverflow.visible,
-                      style: TextStyle(
-                        fontSize: 9.5,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF0F172A),
-                      ),
-                    ),
-                  ),
+            ),
+          );
+
+          final labelTop = (by - 22.0).clamp(4.0, contH - 24.0);
+          final labelLeft = bx.clamp(4.0, (contW - 96.0).clamp(4.0, contW));
+          labelWidget = Positioned(
+            left: labelLeft,
+            top: labelTop,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: const Color(0xFF22C55E),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: const Text(
+                'Area Wajah',
+                maxLines: 1,
+                softWrap: false,
+                style: TextStyle(
+                  fontSize: 9.5,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF0F172A),
                 ),
               ),
             ),
@@ -690,6 +687,7 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
               fit: BoxFit.contain,
             ),
             ?boxWidget,
+            ?labelWidget,
           ],
         );
       },
