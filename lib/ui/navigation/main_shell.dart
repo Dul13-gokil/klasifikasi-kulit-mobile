@@ -679,7 +679,7 @@ class _MainShellState extends State<MainShell> {
             NavigationDestination(
               icon: const Icon(LucideIcons.grid),
               selectedIcon: Icon(LucideIcons.grid, color: AppColors.accent),
-              label: AppStrings.tr('Matriks & Evaluasi', 'Matrix & Eval'),
+              label: AppStrings.tr('Evaluasi', 'Evaluation'),
             ),
           if (showDataset)
             NavigationDestination(
