@@ -275,6 +275,136 @@ class _MainShellState extends State<MainShell> {
     );
   }
 
+  void _openHeaderBurgerMenu(BuildContext context, bool isDark) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        decoration: BoxDecoration(
+          color: AppColors.bgCard,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          border: Border(top: BorderSide(color: AppColors.borderPink)),
+        ),
+        padding: const EdgeInsets.fromLTRB(20, 14, 20, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 38,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.border,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Text(
+              AppStrings.tr('Pengaturan Tampilan', 'Display Settings'),
+              style: AppTheme.serif(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textMain,
+              ),
+            ),
+            const SizedBox(height: 14),
+            // 1. Bahasa (ID / EN)
+            ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: AppColors.border),
+              ),
+              tileColor: AppColors.bgSubtle,
+              leading: Icon(Icons.language_rounded, color: AppColors.accent),
+              title: Text(
+                AppStrings.tr('Bahasa Aplikasi', 'App Language'),
+                style: TextStyle(
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textMain,
+                ),
+              ),
+              trailing: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  widget.scanViewModel.language.toUpperCase(),
+                  style: AppTheme.mono(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              onTap: () {
+                widget.scanViewModel.toggleLanguage();
+                Navigator.of(ctx).pop();
+              },
+            ),
+            const SizedBox(height: 10),
+            // 2. Pengaturan CMS Fitur
+            ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: AppColors.border),
+              ),
+              tileColor: AppColors.bgSubtle,
+              leading: Icon(LucideIcons.sliders, color: AppColors.accent),
+              title: Text(
+                AppStrings.tr('Pengaturan Fitur (CMS)', 'Feature Settings (CMS)'),
+                style: TextStyle(
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textMain,
+                ),
+              ),
+              trailing: Icon(Icons.chevron_right_rounded, color: AppColors.textMuted),
+              onTap: () {
+                Navigator.of(ctx).pop();
+                _openCmsModal();
+              },
+            ),
+            const SizedBox(height: 10),
+            // 3. Mode Gelap / Terang
+            ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: AppColors.border),
+              ),
+              tileColor: AppColors.bgSubtle,
+              leading: Icon(
+                isDark ? LucideIcons.sun : LucideIcons.moon,
+                color: AppColors.accent,
+              ),
+              title: Text(
+                isDark
+                    ? AppStrings.tr('Beralih ke Mode Terang', 'Switch to Light Mode')
+                    : AppStrings.tr('Beralih ke Mode Gelap', 'Switch to Dark Mode'),
+                style: TextStyle(
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textMain,
+                ),
+              ),
+              onTap: () {
+                widget.scanViewModel.toggleDarkMode();
+                Navigator.of(ctx).pop();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _openServerConfigModal() {
     final controller = TextEditingController(
       text: widget.scanViewModel.currentServerUrl,
@@ -606,72 +736,9 @@ class _MainShellState extends State<MainShell> {
               ],
             ),
             actions: [
-              // Tombol Switch Bahasa (ID / EN) untuk Jurnal
+              // Indikator Status Koneksi Server Flask
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 11,
-                  horizontal: 2,
-                ),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  onTap: () => widget.scanViewModel.toggleLanguage(),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 7,
-                      vertical: 3,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.accentSoft,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: AppColors.accent.withValues(alpha: 0.45),
-                      ),
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      widget.scanViewModel.language.toUpperCase(),
-                      style: AppTheme.mono(
-                        fontSize: 10.5,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.accent,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              // Tombol CMS Visibilitas Fitur
-              IconButton(
-                tooltip: AppStrings.tr(
-                  'CMS Pengaturan Visibilitas Fitur',
-                  'Feature Visibility CMS',
-                ),
-                visualDensity: VisualDensity.compact,
-                onPressed: _openCmsModal,
-                icon: Icon(
-                  LucideIcons.sliders,
-                  size: 18,
-                  color: AppColors.textMain,
-                ),
-              ),
-
-              // Tombol Toggle Dark / Light Mode
-              IconButton(
-                tooltip: isDark
-                    ? AppStrings.tr('Mode Terang', 'Light Mode')
-                    : AppStrings.tr('Mode Gelap', 'Dark Mode'),
-                visualDensity: VisualDensity.compact,
-                onPressed: () => widget.scanViewModel.toggleDarkMode(),
-                icon: Icon(
-                  isDark ? LucideIcons.sun : LucideIcons.moon,
-                  size: 18,
-                  color: AppColors.textMain,
-                ),
-              ),
-
-              // Indikator Status Koneksi Tailscale / Server Flask
-              Padding(
-                padding: const EdgeInsets.only(right: 8, left: 1),
+                padding: const EdgeInsets.only(right: 4, left: 1),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(20),
                   onTap: _openServerConfigModal,
@@ -716,6 +783,28 @@ class _MainShellState extends State<MainShell> {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Burger Menu (Bahasa, CMS & Mode Gelap/Terang — Konsisten dengan Website)
+              Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: IconButton(
+                  tooltip: AppStrings.tr('Menu Pengaturan', 'Settings Menu'),
+                  onPressed: () => _openHeaderBurgerMenu(context, isDark),
+                  icon: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColors.bgSubtle,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.borderPink),
+                    ),
+                    child: Icon(
+                      Icons.menu_rounded,
+                      size: 18,
+                      color: AppColors.textMain,
                     ),
                   ),
                 ),

@@ -32,6 +32,7 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
   int _selectedCameraIdx = 0;
   bool _isCameraInitialized = false;
   bool _isStartingCamera = false;
+  bool _isImageExpanded = false;
   String? _cameraInitError;
   final ImagePicker _picker = ImagePicker();
 
@@ -265,15 +266,24 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
 
         return Column(
           children: [
-            // Area Viewfinder Kamera / Foto Wajah
+            // Area Viewfinder Kamera / Foto Wajah (Bisa diklik untuk memperbesar ke bawah saat ada foto)
             Expanded(
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(14, 10, 14, 10),
-                decoration: BoxDecoration(
-                  color: AppColors.bgSubtle,
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: AppColors.borderPink, width: 1.2),
-                ),
+              flex: (hasCaptured && pred != null && !isAnalyzing)
+                  ? (_isImageExpanded ? 7 : 4)
+                  : 1,
+              child: GestureDetector(
+                onTap: (hasCaptured && !isAnalyzing)
+                    ? () => setState(() => _isImageExpanded = !_isImageExpanded)
+                    : null,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOutCubic,
+                  margin: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+                  decoration: BoxDecoration(
+                    color: AppColors.bgSubtle,
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(color: AppColors.borderPink, width: 1.2),
+                  ),
                 clipBehavior: Clip.antiAlias,
                 child: Stack(
                   fit: StackFit.expand,
@@ -568,13 +578,18 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
                   ],
                 ),
               ),
+              ),
             ),
 
-            // Panel Hasil & Rekomendasi (Muncul di Bawah saat Foto Selesai Dianalisis)
+            // Panel Hasil & Rekomendasi (Animasi menyusut saat gambar diperbesar ke bawah)
             if (hasCaptured && pred != null && !isAnalyzing)
-              ConstrainedBox(
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOutCubic,
                 constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.58,
+                  maxHeight: _isImageExpanded
+                      ? MediaQuery.of(context).size.height * 0.28
+                      : MediaQuery.of(context).size.height * 0.56,
                 ),
                 child: SingleChildScrollView(
                   child: ResultBottomSheet(
@@ -582,7 +597,10 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
                     result: pred,
                     onSavePersonalScan: _savePersonalScan,
                     onOpenSaveSheet: _openSaveModal,
-                    onRetake: () => widget.viewModel.clearCapture(),
+                    onRetake: () {
+                      setState(() => _isImageExpanded = false);
+                      widget.viewModel.clearCapture();
+                    },
                     showSaveScanButton: widget.viewModel.showSaveScanButton,
                     showSaveButton: widget.viewModel.showSaveTestButton,
                   ),
@@ -634,17 +652,28 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
               ),
               alignment: Alignment.topLeft,
               child: Transform.translate(
-                offset: const Offset(0, -18),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                  color: const Color(0xFF22C55E),
-                  child: const Text(
-                    'Area Wajah',
-                    style: TextStyle(
-                      fontSize: 9.5,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF0F172A),
+                offset: const Offset(0, -20),
+                child: OverflowBox(
+                  maxWidth: 160,
+                  maxHeight: 24,
+                  alignment: Alignment.bottomLeft,
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF22C55E),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Text(
+                      'Area Wajah',
+                      maxLines: 1,
+                      softWrap: false,
+                      overflow: TextOverflow.visible,
+                      style: TextStyle(
+                        fontSize: 9.5,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF0F172A),
+                      ),
                     ),
                   ),
                 ),
