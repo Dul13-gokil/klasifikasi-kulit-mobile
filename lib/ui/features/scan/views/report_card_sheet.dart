@@ -155,7 +155,6 @@ class ReportCardSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final top = AppStrings.localizeTopDiagnosis(result.top);
-    final iq = AppStrings.localizeImageQuality(result.imageQuality);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,10 +192,10 @@ class ReportCardSheet extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'MobileNetV2 • $timestamp',
+                          timestamp,
                           style: AppTheme.mono(
                             fontSize: 10.5,
-                            color: const Color(0xFF94A3B8),
+                            color: AppColors.textMuted,
                           ),
                         ),
                       ],
@@ -204,7 +203,7 @@ class ReportCardSheet extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 14),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -226,77 +225,48 @@ class ReportCardSheet extends StatelessWidget {
                       children: [
                         Text(
                           AppStrings.tr(
-                            'PREDIKSI UTAMA:',
-                            'PRIMARY DIAGNOSIS:',
+                            'KONDISI KULIT UTAMA',
+                            'PRIMARY SKIN CONDITION',
                           ),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w700,
-                            color: Color(0xFF94A3B8),
+                            letterSpacing: 0.5,
+                            color: AppColors.textMuted,
                           ),
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 3),
                         Text(
                           top.label,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
+                          style: AppTheme.serif(
+                            fontSize: 17.5,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textMain,
+                            height: 1.2,
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Wrap(
-                          spacing: 6,
-                          runSpacing: 4,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: top.color.withValues(alpha: 0.25),
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: top.color.withValues(alpha: 0.6),
-                                ),
-                              ),
-                              child: Text(
-                                'Confidence: ${top.confidence.toStringAsFixed(1)}%',
-                                style: AppTheme.mono(
-                                  fontSize: 10.5,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
+                        const SizedBox(height: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 9,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.bgCard,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: AppColors.borderPink),
+                          ),
+                          child: Text(
+                            AppStrings.tr(
+                              'Tingkat Kecocokan: ${top.confidence.toStringAsFixed(1)}%',
+                              'Match Rate: ${top.confidence.toStringAsFixed(1)}%',
                             ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: (iq.isOptimal
-                                        ? const Color(0xFF059669)
-                                        : const Color(0xFFD97706))
-                                    .withValues(alpha: 0.25),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                iq.isOptimal
-                                    ? AppStrings.tr(
-                                        '✓ Foto Optimal',
-                                        '✓ Optimal Photo',
-                                      )
-                                    : '⚠️ ${iq.lightingLabel}',
-                                style: const TextStyle(
-                                  fontSize: 10.5,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
+                            style: AppTheme.mono(
+                              fontSize: 10.5,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.accent,
                             ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
@@ -306,10 +276,10 @@ class ReportCardSheet extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 top.description.isNotEmpty ? top.description : top.summary,
-                style: const TextStyle(
-                  fontSize: 11.5,
-                  color: Color(0xFFCBD5E1),
-                  height: 1.4,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textMuted,
+                  height: 1.45,
                 ),
               ),
             ],
