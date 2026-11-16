@@ -32,25 +32,27 @@ class ResultBottomSheet extends StatefulWidget {
 }
 
 class _ResultBottomSheetState extends State<ResultBottomSheet> {
-  int _activeTab = 0; // 0 = Produk Skincare (Turun ke Bawah), 1 = Probabilitas 7 Kelas
+  int _activeTab = 0; // 0 = Urutan Skincare, 1 = Detail Kondisi Kulit
 
-  Color _categoryAccentColor(String category) {
+  IconData _stepIcon(int index, String category) {
     final lower = category.toLowerCase();
     if (lower.contains('serum') ||
         lower.contains('treatment') ||
-        lower.contains('perawatan')) {
-      return const Color(0xFF7C3AED);
+        lower.contains('perawatan') ||
+        index == 1) {
+      return Icons.science_outlined;
     } else if (lower.contains('pelembap') ||
         lower.contains('moisturizer') ||
         lower.contains('krim') ||
-        lower.contains('balsam')) {
-      return const Color(0xFF059669);
+        index == 2) {
+      return Icons.spa_outlined;
     } else if (lower.contains('sunscreen') ||
         lower.contains('surya') ||
-        lower.contains('uv')) {
-      return const Color(0xFFEA580C);
+        lower.contains('uv') ||
+        index == 3) {
+      return Icons.wb_sunny_outlined;
     }
-    return const Color(0xFF0284C7);
+    return Icons.water_drop_outlined;
   }
 
   void _openReportModal() {
@@ -66,22 +68,179 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
     );
   }
 
+  void _showProductDetailDialog(
+    BuildContext context,
+    SkincareProduct prod,
+    int stepNumber,
+  ) {
+    showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+        backgroundColor: AppColors.bgCard,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: BorderSide(color: AppColors.borderPink),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.bgSubtle,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.borderPink),
+                    ),
+                    child: Text(
+                      '${AppStrings.tr("Tahap", "Step")} $stepNumber • ${prod.category}',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.accent,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    visualDensity: VisualDensity.compact,
+                    onPressed: () => Navigator.of(ctx).pop(),
+                    icon: Icon(LucideIcons.x, size: 18, color: AppColors.textMuted),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                prod.name,
+                style: AppTheme.serif(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textMain,
+                  height: 1.25,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  if (prod.brand.isNotEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 9,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.bgSubtle,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColors.border),
+                      ),
+                      child: Text(
+                        prod.brand,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textMain,
+                        ),
+                      ),
+                    ),
+                  if (prod.timeUsage.isNotEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 9,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.bgSubtle,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColors.borderPink),
+                      ),
+                      child: Text(
+                        prod.timeUsage,
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.accent,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              if (prod.actives.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Text(
+                  AppStrings.tr('Kandungan Aktif:', 'Active Ingredients:'),
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textMuted,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  prod.actives,
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textMain,
+                  ),
+                ),
+              ],
+              if (prod.desc.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Text(
+                  AppStrings.tr('Manfaat & Cara Pakai:', 'Benefits & Usage:'),
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textMuted,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  prod.desc,
+                  style: TextStyle(
+                    fontSize: 12.5,
+                    color: AppColors.textMuted,
+                    height: 1.45,
+                  ),
+                ),
+              ],
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () => Navigator.of(ctx).pop(),
+                  child: Text(AppStrings.tr('Tutup', 'Close')),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final top = AppStrings.localizeTopDiagnosis(widget.result.top);
-    final iq = AppStrings.localizeImageQuality(widget.result.imageQuality);
 
     return Container(
       decoration: BoxDecoration(
         color: AppColors.bgCard,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x260F172A),
-            blurRadius: 20,
-            offset: Offset(0, -4),
-          ),
-        ],
+        border: Border(top: BorderSide(color: AppColors.border)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -100,13 +259,13 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Kartu Diagnosis Utama (Border seragam + tombol Kartu Laporan)
+                // Kartu Hasil Diagnosis Utama (Gaya Editorial SKINYLIST)
                 Container(
                   decoration: BoxDecoration(
                     color: AppColors.bgSubtle,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(14),
                     border: Border.all(
-                      color: top.color.withValues(alpha: 0.45),
+                      color: AppColors.borderPink,
                       width: 1.2,
                     ),
                   ),
@@ -121,55 +280,32 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Wrap(
-                                  spacing: 8,
-                                  runSpacing: 4,
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 2,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: top.color.withValues(alpha: 0.14),
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                          color: top.color.withValues(alpha: 0.35),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        top.badge,
-                                        style: TextStyle(
-                                          fontSize: 10.5,
-                                          fontWeight: FontWeight.w700,
-                                          color: top.color,
-                                        ),
-                                      ),
-                                    ),
-                                    Text(
-                                      '${widget.result.elapsedMs.toStringAsFixed(0)} ms',
-                                      style: AppTheme.mono(
-                                        fontSize: 11,
-                                        color: AppColors.textSubtle,
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  AppStrings.tr(
+                                    'KONDISI KULIT ANDA',
+                                    'YOUR SKIN CONDITION',
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 0.7,
+                                    color: AppColors.textMuted,
+                                  ),
                                 ),
-                                const SizedBox(height: 6),
+                                const SizedBox(height: 4),
                                 Text(
                                   top.label,
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w800,
+                                  style: AppTheme.serif(
+                                    fontSize: 18.5,
+                                    fontWeight: FontWeight.w700,
                                     color: AppColors.textMain,
-                                    letterSpacing: -0.3,
+                                    height: 1.2,
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
@@ -178,11 +314,14 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
                                 style: AppTheme.mono(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w800,
-                                  color: top.color,
+                                  color: AppColors.accent,
                                 ),
                               ),
                               Text(
-                                'Confidence',
+                                AppStrings.tr(
+                                  'Tingkat Kecocokan',
+                                  'Match Rate',
+                                ),
                                 style: TextStyle(
                                   fontSize: 10.5,
                                   color: AppColors.textMuted,
@@ -202,152 +341,79 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      // Tombol Buka Kartu Laporan Hasil Analisis Kulit
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: InkWell(
-                          onTap: _openReportModal,
-                          borderRadius: BorderRadius.circular(8),
-                          child: Container(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
+                              horizontal: 9,
+                              vertical: 3,
                             ),
                             decoration: BoxDecoration(
                               color: AppColors.bgCard,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: AppColors.border),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: AppColors.borderPink),
                             ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  LucideIcons.fileText,
-                                  size: 13.5,
-                                  color: AppColors.accent,
-                                ),
-                                const SizedBox(width: 5),
-                                Text(
-                                  AppStrings.tr(
-                                    'Lihat Kartu Laporan Lengkap',
-                                    'View Full Report Card',
-                                  ),
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.accent,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-
-                // Indikator Kelayakan Kualitas Foto (Image Quality Check)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: (iq.isOptimal
-                            ? const Color(0xFF059669)
-                            : const Color(0xFFD97706))
-                        .withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: (iq.isOptimal
-                              ? const Color(0xFF059669)
-                              : const Color(0xFFD97706))
-                          .withValues(alpha: 0.38),
-                    ),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(
-                        iq.isOptimal
-                            ? LucideIcons.checkCircle
-                            : LucideIcons.alertTriangle,
-                        size: 16,
-                        color: iq.isOptimal
-                            ? const Color(0xFF059669)
-                            : const Color(0xFFD97706),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Wrap(
-                              spacing: 6,
-                              runSpacing: 4,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                                Text(
-                                  iq.title,
-                                  style: TextStyle(
-                                    fontSize: 11.5,
-                                    fontWeight: FontWeight.w800,
-                                    color: iq.isOptimal
-                                        ? const Color(0xFF059669)
-                                        : const Color(0xFFD97706),
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 6,
-                                    vertical: 1.5,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.bgCard,
-                                    borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(color: AppColors.border),
-                                  ),
-                                  child: Text(
-                                    AppStrings.tr(
-                                      'Cahaya: ${iq.lightingLabel} • Fokus: ${iq.sharpnessLabel}',
-                                      'Light: ${iq.lightingLabel} • Focus: ${iq.sharpnessLabel}',
-                                    ),
-                                    style: AppTheme.mono(
-                                      fontSize: 9.5,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.textMain,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 3),
-                            Text(
-                              iq.message,
+                            child: Text(
+                              top.badge,
                               style: TextStyle(
                                 fontSize: 11,
-                                color: AppColors.textMuted,
-                                height: 1.35,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.accent,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          InkWell(
+                            onTap: _openReportModal,
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 5,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.bgCard,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: AppColors.border),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    LucideIcons.fileText,
+                                    size: 13.5,
+                                    color: AppColors.accent,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    AppStrings.tr(
+                                      'Kartu Laporan',
+                                      'Report Card',
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.accent,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 12),
 
-                // Segmented Sub-Navigasi Mobile (Rekomendasi Skincare vs Distribusi 7 Kelas)
+                // Segmented Sub-Navigasi (Urutan Skincare vs Detail Kondisi Kulit)
                 Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     color: AppColors.bgSubtle,
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColors.border),
+                    border: Border.all(color: AppColors.borderPink),
                   ),
                   child: Row(
                     children: [
@@ -355,8 +421,10 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
                         child: _buildSubnavButton(
                           index: 0,
                           icon: LucideIcons.sparkles,
-                          label:
-                              'Skincare (${top.productRecommendations.length})',
+                          label: AppStrings.tr(
+                            'Urutan Skincare (${top.productRecommendations.length})',
+                            'Skincare (${top.productRecommendations.length})',
+                          ),
                         ),
                       ),
                       Expanded(
@@ -364,8 +432,8 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
                           index: 1,
                           icon: LucideIcons.barChart2,
                           label: AppStrings.tr(
-                            'Probabilitas 7 Kelas',
-                            '7-Class Probabilities',
+                            'Detail Kondisi Kulit',
+                            'Skin Details',
                           ),
                         ),
                       ),
@@ -374,15 +442,14 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
                 ),
                 const SizedBox(height: 14),
 
-                // Isi Sub-View
                 if (_activeTab == 0)
-                  _buildProductsSectionVertical(top)
+                  _buildRoutineFlowSection(top)
                 else
                   _buildProbabilitiesSection(top),
 
                 const SizedBox(height: 16),
 
-                // Action Bar Bawah: Foto Ulang, Simpan Scan Pribadi & Simpan Data Uji (Sesuai CMS)
+                // Action Bar Bawah
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
@@ -395,10 +462,8 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
                     if (widget.showSaveScanButton)
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.accent,
-                          foregroundColor: AppColors.isDark
-                              ? const Color(0xFF090D16)
-                              : Colors.white,
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 14,
                             vertical: 11,
@@ -448,15 +513,6 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
         decoration: BoxDecoration(
           color: isSelected ? AppColors.bgCard : Colors.transparent,
           borderRadius: BorderRadius.circular(7),
-          boxShadow: isSelected
-              ? const [
-                  BoxShadow(
-                    color: Color(0x140F172A),
-                    blurRadius: 3,
-                    offset: Offset(0, 1),
-                  )
-                ]
-              : null,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -484,168 +540,119 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
     );
   }
 
-  /// Daftar Rekomendasi Produk Skincare Vertikal ke Bawah + Jadwal AM/PM + Pantangan Bahan
-  Widget _buildProductsSectionVertical(TopDiagnosis top) {
+  /// Alur Perawatan Harian 4 Tahap (Grid 2x2 dengan garis alur & pop-up Selengkapnya)
+  Widget _buildRoutineFlowSection(TopDiagnosis top) {
+    final products = top.productRecommendations;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ...List.generate(top.productRecommendations.length, (idx) {
-          final prod = top.productRecommendations[idx];
-          final barColor = _categoryAccentColor(prod.category);
-          final stepNum = (idx + 1).toString().padLeft(2, '0');
-
-          return Container(
+        Text(
+          AppStrings.tr('ALUR PERAWATAN HARIAN', 'DAILY SKINCARE ROUTINE'),
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 0.6,
+            color: AppColors.textMuted,
+          ),
+        ),
+        const SizedBox(height: 10),
+        if (products.isNotEmpty)
+          Container(
             width: double.infinity,
-            margin: const EdgeInsets.only(bottom: 10),
-            padding: const EdgeInsets.all(13),
+            padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: AppColors.bgCard,
-              borderRadius: BorderRadius.circular(11),
-              border: Border.all(
-                color: barColor.withValues(alpha: 0.38),
-                width: 1.2,
-              ),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: AppColors.borderPink),
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header Kategori & Brand
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  alignment: WrapAlignment.spaceBetween,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: barColor.withValues(alpha: 0.14),
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(
-                          color: barColor.withValues(alpha: 0.35),
+                if (products.length >= 2)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: _buildRoutineStepTile(products[0], 0)),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 18, left: 4, right: 4),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 14,
+                              height: 1.5,
+                              color: AppColors.borderPink,
+                            ),
+                            Icon(
+                              Icons.chevron_right_rounded,
+                              size: 16,
+                              color: AppColors.accent,
+                            ),
+                          ],
                         ),
                       ),
-                      child: Text(
-                        '$stepNum • ${prod.category.toUpperCase()}',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w800,
-                          color: barColor,
-                          letterSpacing: 0.2,
+                      Expanded(child: _buildRoutineStepTile(products[1], 1)),
+                    ],
+                  )
+                else
+                  _buildRoutineStepTile(products[0], 0),
+                if (products.length >= 3) ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Container(
+                      height: 12,
+                      margin: const EdgeInsets.symmetric(horizontal: 42),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          left: BorderSide(color: AppColors.borderPink, width: 1.5),
+                          right: BorderSide(color: AppColors.borderPink, width: 1.5),
+                          bottom: BorderSide(color: AppColors.borderPink, width: 1.5),
+                        ),
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(8),
+                          bottomRight: Radius.circular(8),
                         ),
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.bgSubtle,
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: AppColors.border),
-                      ),
-                      child: Text(
-                        prod.brand,
-                        style: TextStyle(
-                          fontSize: 10.5,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.textMain,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-
-                // Nama Lengkap Produk
-                Text(
-                  prod.name,
-                  style: TextStyle(
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.textMain,
-                    height: 1.3,
                   ),
-                ),
-
-                // Jadwal Rutinitas Pagi/Malam & Bahan Aktif Utama Produk
-                const SizedBox(height: 6),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: [
-                    if (prod.timeUsage.isNotEmpty)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 7,
-                          vertical: 3.5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF59E0B).withValues(alpha: 0.14),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color:
-                                const Color(0xFFF59E0B).withValues(alpha: 0.35),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: _buildRoutineStepTile(products[2], 2)),
+                      if (products.length >= 4) ...[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 18, left: 4, right: 4),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 14,
+                                height: 1.5,
+                                color: AppColors.borderPink,
+                              ),
+                              Icon(
+                                Icons.chevron_right_rounded,
+                                size: 16,
+                                color: AppColors.accent,
+                              ),
+                            ],
                           ),
                         ),
-                        child: Text(
-                          prod.timeUsage,
-                          style: const TextStyle(
-                            fontSize: 10.5,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFFD97706),
-                          ),
-                        ),
-                      ),
-                    if (prod.actives.isNotEmpty)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 3.5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.bgSubtle,
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: AppColors.border),
-                        ),
-                        child: Text(
-                          '🧪 ${prod.actives}',
-                          style: TextStyle(
-                            fontSize: 10.5,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textMain,
-                            height: 1.3,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-
-                const SizedBox(height: 6),
-                // Penjelasan Klinis Lengkap
-                Text(
-                  prod.desc,
-                  style: TextStyle(
-                    fontSize: 11.5,
-                    color: AppColors.textMuted,
-                    height: 1.4,
+                        Expanded(child: _buildRoutineStepTile(products[3], 3)),
+                      ] else
+                        const Expanded(child: SizedBox()),
+                    ],
                   ),
-                ),
+                ],
               ],
             ),
-          );
-        }),
-
+          ),
         if (top.recommendations.isNotEmpty) ...[
-          const SizedBox(height: 6),
+          const SizedBox(height: 14),
           Text(
             AppStrings.tr(
-              'BAHAN AKTIF DERMATOLOGIS UTAMA:',
-              'KEY DERMATOLOGICAL ACTIVE INGREDIENTS:',
+              'KANDUNGAN UTAMA YANG COCOK',
+              'KEY BENEFICIAL INGREDIENTS',
             ),
             style: TextStyle(
               fontSize: 11,
@@ -662,14 +669,14 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
               decoration: BoxDecoration(
                 color: AppColors.bgSubtle,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColors.border),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColors.borderPink),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '🧪 ${rec.ingredient}',
+                    rec.ingredient,
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
@@ -690,18 +697,16 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
             );
           }),
         ],
-
-        // Kotak Peringatan Pantangan & Interaksi Bahan Aktif
         if (top.avoidList.isNotEmpty) ...[
           const SizedBox(height: 6),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFFE11D48).withValues(alpha: 0.08),
+              color: AppColors.roseSoft,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: const Color(0xFFE11D48).withValues(alpha: 0.32),
+                color: AppColors.rose.withValues(alpha: 0.35),
               ),
             ),
             child: Column(
@@ -709,14 +714,14 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
               children: [
                 Text(
                   AppStrings.tr(
-                    '⚠️ PANTANGAN & HINDARI BAHAN INI:',
-                    '⚠️ CONTRAINDICATIONS & INGREDIENTS TO AVOID:',
+                    '⚠️ SEBAIKNYA HINDARI',
+                    '⚠️ INGREDIENTS TO AVOID',
                   ),
                   style: const TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w800,
                     letterSpacing: 0.3,
-                    color: Color(0xFFE11D48),
+                    color: AppColors.rose,
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -727,11 +732,11 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          '✕ ',
+                          '• ',
                           style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 12,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFFE11D48),
+                            color: AppColors.rose,
                           ),
                         ),
                         Expanded(
@@ -752,6 +757,114 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
             ),
           ),
         ],
+      ],
+    );
+  }
+
+  Widget _buildRoutineStepTile(SkincareProduct prod, int index) {
+    final stepNum = index + 1;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: AppColors.bgSubtle,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.borderPink),
+              ),
+              child: Icon(
+                _stepIcon(index, prod.category),
+                size: 20,
+                color: AppColors.accent,
+              ),
+            ),
+            Positioned(
+              top: -6,
+              right: -6,
+              child: Container(
+                width: 20,
+                height: 20,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: Text(
+                  '$stepNum',
+                  style: const TextStyle(
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          prod.category,
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textMain,
+          ),
+        ),
+        const SizedBox(height: 3),
+        Text(
+          prod.name,
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 11,
+            color: AppColors.textMuted,
+            height: 1.25,
+          ),
+        ),
+        if (prod.timeUsage.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(
+            prod.timeUsage,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              color: AppColors.accent,
+            ),
+          ),
+        ],
+        const SizedBox(height: 8),
+        InkWell(
+          onTap: () => _showProductDetailDialog(context, prod, stepNum),
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+            decoration: BoxDecoration(
+              color: AppColors.bgSubtle,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: AppColors.borderPink),
+            ),
+            child: Text(
+              AppStrings.tr('Selengkapnya', 'Details'),
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textMain,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -787,8 +900,7 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
                       style: AppTheme.mono(
                         fontSize: 12,
                         fontWeight: isTop ? FontWeight.w700 : FontWeight.w500,
-                        color:
-                            isTop ? AppColors.textMain : AppColors.textMuted,
+                        color: isTop ? AppColors.accent : AppColors.textMuted,
                       ),
                     ),
                   ],
@@ -800,7 +912,9 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
                     value: (item.probability / 100.0).clamp(0.0, 1.0),
                     minHeight: 6,
                     backgroundColor: AppColors.bgSubtle,
-                    valueColor: AlwaysStoppedAnimation<Color>(item.color),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      isTop ? AppColors.accent : AppColors.borderPink,
+                    ),
                   ),
                 ),
               ],

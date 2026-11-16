@@ -160,19 +160,13 @@ class ReportCardSheet extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Kartu Header Laporan Resmi
+        // Kartu Header Laporan Resmi SKINYLIST
         Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: AppColors.bgSubtle,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: const Color(0xFF38BDF8).withValues(alpha: 0.35),
-            ),
+            border: Border.all(color: AppColors.borderPink, width: 1.2),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,14 +181,14 @@ class ReportCardSheet extends StatelessWidget {
                       children: [
                         Text(
                           AppStrings.tr(
-                            'LAPORAN PEMERIKSAAN KULIT WAJAH',
-                            'FACIAL SKIN EXAMINATION REPORT',
+                            'LAPORAN ANALISIS KULIT SKINYLIST',
+                            'SKINYLIST SKIN ANALYSIS REPORT',
                           ),
-                          style: const TextStyle(
-                            fontSize: 12,
+                          style: AppTheme.serif(
+                            fontSize: 13.5,
                             fontWeight: FontWeight.w800,
-                            color: Color(0xFF38BDF8),
-                            letterSpacing: 0.4,
+                            color: AppColors.textMain,
+                            letterSpacing: 0.3,
                           ),
                         ),
                         const SizedBox(height: 2),

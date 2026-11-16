@@ -47,121 +47,31 @@ class LucideIcons {
   static const IconData alertTriangle = Icons.warning_amber_rounded;
 }
 
-/// Widget Logo Vektor Kustom Proyek Klasifikasi Kondisi Kulit Wajah
-/// Identik dengan `/static/img/logo.svg` pada Website.
+/// Widget Logo Resmi SKINYLIST di dalam kotak putih bersih berborder tipis
+/// Konsisten dengan `/static/img/skinylist_logo.png` pada Website.
 class AppLogoBadge extends StatelessWidget {
   final double size;
 
-  const AppLogoBadge({super.key, this.size = 36});
+  const AppLogoBadge({super.key, this.size = 38});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: size,
       height: size,
+      padding: EdgeInsets.all(size * 0.14),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFF0F172A), Color(0xFF1E293B)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(size * 0.28),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(size * 0.24),
         border: Border.all(
-          color: const Color(0xFF38BDF8).withValues(alpha: 0.35),
-          width: 1.2,
+          color: const Color(0xFFEAEAEA),
+          width: 1.4,
         ),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x260F172A),
-            blurRadius: 6,
-            offset: Offset(0, 2),
-          ),
-        ],
       ),
-      child: CustomPaint(
-        painter: _SkinScannerLogoPainter(),
+      child: Image.asset(
+        'assets/images/skinylist_logo.png',
+        fit: BoxFit.contain,
       ),
     );
   }
-}
-
-class _SkinScannerLogoPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final s = size.width / 64.0;
-
-    final cyanPaint = Paint()
-      ..shader = const LinearGradient(
-        colors: [Color(0xFF38BDF8), Color(0xFF2563EB)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 3.2 * s
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
-
-    // 4 Corner Scanner Brackets
-    final bracketPath = Path()
-      // Top-Left
-      ..moveTo(13 * s, 21 * s)
-      ..lineTo(13 * s, 15 * s)
-      ..quadraticBezierTo(13 * s, 13 * s, 15 * s, 13 * s)
-      ..lineTo(21 * s, 13 * s)
-      // Top-Right
-      ..moveTo(43 * s, 13 * s)
-      ..lineTo(49 * s, 13 * s)
-      ..quadraticBezierTo(51 * s, 13 * s, 51 * s, 15 * s)
-      ..lineTo(51 * s, 21 * s)
-      // Bottom-Left
-      ..moveTo(13 * s, 43 * s)
-      ..lineTo(13 * s, 49 * s)
-      ..quadraticBezierTo(13 * s, 51 * s, 15 * s, 51 * s)
-      ..lineTo(21 * s, 51 * s)
-      // Bottom-Right
-      ..moveTo(51 * s, 43 * s)
-      ..lineTo(51 * s, 49 * s)
-      ..quadraticBezierTo(51 * s, 51 * s, 49 * s, 51 * s)
-      ..lineTo(43 * s, 51 * s);
-
-    canvas.drawPath(bracketPath, cyanPaint);
-
-    // Biometric Face Oval Contour
-    final facePaint = Paint()
-      ..color = const Color(0xFFF8FAFC)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.6 * s;
-
-    canvas.drawOval(
-      Rect.fromCenter(
-        center: Offset(32 * s, 32 * s),
-        width: 22 * s,
-        height: 28 * s,
-      ),
-      facePaint,
-    );
-
-    // Emerald Scan Line
-    final scanPaint = Paint()
-      ..color = const Color(0xFF34D399)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.2 * s
-      ..strokeCap = StrokeCap.round;
-
-    canvas.drawLine(
-      Offset(18 * s, 32 * s),
-      Offset(46 * s, 32 * s),
-      scanPaint,
-    );
-
-    // Top-right Dermatology Sparkle Dot
-    final sparklePaint = Paint()
-      ..color = const Color(0xFF34D399)
-      ..style = PaintingStyle.fill;
-
-    canvas.drawCircle(Offset(45 * s, 19 * s), 2.8 * s, sparklePaint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

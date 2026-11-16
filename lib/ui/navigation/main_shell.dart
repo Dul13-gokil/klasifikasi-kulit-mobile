@@ -172,10 +172,8 @@ class _MainShellState extends State<MainShell> {
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.accent,
-                        foregroundColor: AppColors.isDark
-                            ? const Color(0xFF090D16)
-                            : Colors.white,
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
                       ),
                       onPressed: () async {
                         await widget.scanViewModel.saveCmsSettings(
@@ -531,7 +529,7 @@ class _MainShellState extends State<MainShell> {
           NavigationDestination(
             icon: const Icon(LucideIcons.scanFace),
             selectedIcon: Icon(LucideIcons.scanFace, color: AppColors.accent),
-            label: AppStrings.tr('Pindai Wajah', 'Face Scan'),
+            label: AppStrings.tr('Cek Kulit', 'Skin Check'),
           ),
           if (showHistory)
             NavigationDestination(
@@ -571,31 +569,29 @@ class _MainShellState extends State<MainShell> {
 
         return Scaffold(
           appBar: AppBar(
-            titleSpacing: 12,
+            titleSpacing: 14,
             title: Row(
               children: [
-                const AppLogoBadge(size: 32),
-                const SizedBox(width: 8),
+                const AppLogoBadge(size: 34),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        AppStrings.tr(
-                          'Klasifikasi Kulit Wajah',
-                          'Facial Skin Classification',
-                        ),
+                        'SKINYLIST',
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w700,
+                        style: AppTheme.serif(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
                           color: AppColors.textMain,
+                          letterSpacing: 0.4,
                         ),
                       ),
                       Text(
                         AppStrings.tr(
-                          'MobileNetV2 • 7 Kelas',
-                          'MobileNetV2 • 7 Classes',
+                          'Cek Kondisi Kulit & Skincare',
+                          'Skin Check & Skincare Guide',
                         ),
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(

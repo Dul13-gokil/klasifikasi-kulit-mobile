@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../core/i18n/app_strings.dart';
+import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/lucide_icons.dart';
 import '../features/dataset/view_models/dataset_view_model.dart';
 import '../features/scan/view_models/scan_view_model.dart';
 import 'main_shell.dart';
 
-/// Halaman Splash Screen & Selamat Datang saat aplikasi pertama kali dibuka
+/// Halaman Splash Screen & Selamat Datang SKINYLIST
 class SplashScreen extends StatefulWidget {
   final ScanViewModel scanViewModel;
   final DatasetViewModel datasetViewModel;
@@ -27,8 +28,8 @@ class _SplashScreenState extends State<SplashScreen>
   late final Animation<double> _fadeAnim;
   late final Animation<double> _scaleAnim;
   String _statusText = AppStrings.tr(
-    'Menyiapkan antarmuka & konfigurasi...',
-    'Preparing interface & configuration...',
+    'Menyiapkan tampilan SKINYLIST...',
+    'Preparing SKINYLIST...',
   );
   double _progressValue = 0.25;
 
@@ -37,13 +38,13 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
     _animController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 650),
     );
     _fadeAnim = CurvedAnimation(
       parent: _animController,
       curve: Curves.easeOut,
     );
-    _scaleAnim = Tween<double>(begin: 0.88, end: 1.0).animate(
+    _scaleAnim = Tween<double>(begin: 0.9, end: 1.0).animate(
       CurvedAnimation(parent: _animController, curve: Curves.easeOutBack),
     );
 
@@ -52,43 +53,42 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _runStartupSequence() async {
-    await Future.delayed(const Duration(milliseconds: 450));
+    await Future.delayed(const Duration(milliseconds: 420));
     if (!mounted) return;
     setState(() {
       _statusText = AppStrings.tr(
-        'Menghubungkan ke Server Flask (MobileNetV2)...',
-        'Connecting to Flask Server (MobileNetV2)...',
+        'Menghubungkan ke layanan analisis kulit...',
+        'Connecting to skin analysis service...',
       );
       _progressValue = 0.65;
     });
 
-    // Jalankan pengecekan server & muat data tanpa menghambat jika sedang offline
     await Future.wait([
       widget.scanViewModel.checkServerStatus(),
       widget.datasetViewModel.refreshDataset(),
-      Future.delayed(const Duration(milliseconds: 850)),
+      Future.delayed(const Duration(milliseconds: 800)),
     ]);
 
     if (!mounted) return;
     setState(() {
       _statusText = widget.scanViewModel.isServerOnline
           ? AppStrings.tr(
-              'Server terhubung! Masuk ke beranda...',
-              'Server connected! Entering home screen...',
+              'Layanan siap! Membuka beranda...',
+              'Service ready! Opening home...',
             )
           : AppStrings.tr(
-              'Siap digunakan! Masuk ke beranda...',
-              'Ready! Entering home screen...',
+              'Siap digunakan! Membuka beranda...',
+              'Ready! Opening home...',
             );
       _progressValue = 1.0;
     });
 
-    await Future.delayed(const Duration(milliseconds: 350));
+    await Future.delayed(const Duration(milliseconds: 320));
     if (!mounted) return;
 
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 400),
+        transitionDuration: const Duration(milliseconds: 380),
         pageBuilder: (_, _, _) => MainShell(
           scanViewModel: widget.scanViewModel,
           datasetViewModel: widget.datasetViewModel,
@@ -108,8 +108,19 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = widget.scanViewModel.isDarkMode;
+    final bgColor = isDark ? const Color(0xFF1E222B) : const Color(0xFFFFFFFF);
+    final blushBg = isDark ? const Color(0xFF302A34) : const Color(0xFFFCEAE6);
+    final borderPink =
+        isDark ? const Color(0xFF4B3745) : const Color(0xFFF3D1C9);
+    final textMain =
+        isDark ? const Color(0xFFF3F4F6) : const Color(0xFF141414);
+    final textMuted =
+        isDark ? const Color(0xFFC4C9D4) : const Color(0xFF666666);
+    final accent = AppColors.accent;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF090D16),
+      backgroundColor: bgColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
@@ -117,7 +128,6 @@ class _SplashScreenState extends State<SplashScreen>
             children: [
               const Spacer(flex: 2),
 
-              // Bagian Tengah: Logo, Badge Selamat Datang & Judul Aplikasi
               FadeTransition(
                 opacity: _fadeAnim,
                 child: ScaleTransition(
@@ -125,83 +135,70 @@ class _SplashScreenState extends State<SplashScreen>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Halo & Custom Logo
+                      // Arch / Blush Frame mengelilingi Logo SKINYLIST
                       Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color(0xFF38BDF8).withValues(alpha: 0.08),
-                          border: Border.all(
-                            color:
-                                const Color(0xFF38BDF8).withValues(alpha: 0.22),
-                            width: 1.2,
+                          color: blushBg,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(64),
+                            topRight: Radius.circular(64),
+                            bottomLeft: Radius.circular(24),
+                            bottomRight: Radius.circular(24),
                           ),
+                          border: Border.all(color: borderPink, width: 1.4),
                         ),
                         child: const AppLogoBadge(size: 84),
                       ),
                       const SizedBox(height: 22),
 
-                      // Pill Selamat Datang
+                      // Pill Brand
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
+                          horizontal: 14,
+                          vertical: 5,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF059669).withValues(alpha: 0.16),
+                          color: blushBg,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color:
-                                const Color(0xFF34D399).withValues(alpha: 0.35),
-                          ),
+                          border: Border.all(color: borderPink),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              LucideIcons.sparkles,
-                              size: 13,
-                              color: Color(0xFF34D399),
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              AppStrings.tr('SELAMAT DATANG', 'WELCOME'),
-                              style: AppTheme.mono(
-                                fontSize: 10.5,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF34D399),
-                              ),
-                            ),
-                          ],
+                        child: Text(
+                          AppStrings.tr(
+                            'SKINYLIST • PERAWATAN WAJAH',
+                            'SKINYLIST • FACIAL SKINCARE',
+                          ),
+                          style: TextStyle(
+                            fontSize: 10.5,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.6,
+                            color: accent,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 14),
 
                       Text(
-                        AppStrings.tr(
-                          'Klasifikasi Kondisi\nKulit Wajah',
-                          'Facial Skin Condition\nClassification',
-                        ),
+                        'SKINYLIST',
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 24,
+                        style: AppTheme.serif(
+                          fontSize: 30,
                           fontWeight: FontWeight.w800,
-                          color: Color(0xFFF8FAFC),
-                          height: 1.2,
-                          letterSpacing: -0.4,
+                          color: textMain,
+                          letterSpacing: 0.5,
                         ),
                       ),
                       const SizedBox(height: 10),
                       Text(
                         AppStrings.tr(
-                          'Sistem Analisis Dermatologi 7 Kelas Berbasis\nMobileNetV2 & Rekomendasi Perawatan Kulit',
-                          '7-Class Dermatological Analysis System Based on\nMobileNetV2 & Skincare Recommendations',
+                          'Cek kondisi kulit wajah & dapatkan urutan\nperawatan harian yang sesuai untuk Anda.',
+                          'Check your facial skin condition & get\nyour personalized daily skincare routine.',
                         ),
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: Color(0xFF94A3B8),
-                          height: 1.45,
+                        style: TextStyle(
+                          fontSize: 13.5,
+                          color: textMuted,
+                          height: 1.5,
                         ),
                       ),
                     ],
@@ -211,7 +208,6 @@ class _SplashScreenState extends State<SplashScreen>
 
               const Spacer(flex: 2),
 
-              // Bagian Bawah: Progress Bar & Status Loading Peralihan ke Beranda
               Column(
                 children: [
                   ClipRRect(
@@ -221,10 +217,8 @@ class _SplashScreenState extends State<SplashScreen>
                       height: 5,
                       child: LinearProgressIndicator(
                         value: _progressValue,
-                        backgroundColor: const Color(0xFF1E293B),
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                          Color(0xFF38BDF8),
-                        ),
+                        backgroundColor: blushBg,
+                        valueColor: AlwaysStoppedAnimation<Color>(accent),
                       ),
                     ),
                   ),
@@ -232,18 +226,22 @@ class _SplashScreenState extends State<SplashScreen>
                   Text(
                     _statusText,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFF94A3B8),
+                      color: textMuted,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 14),
                   Text(
-                    'MobileNetV2 • OpenCV Haar Cascade • Flask API',
-                    style: AppTheme.mono(
-                      fontSize: 10,
-                      color: const Color(0xFF64748B),
+                    AppStrings.tr(
+                      '7 Kondisi Kulit • 4 Tahap Skincare',
+                      '7 Skin Conditions • 4 Skincare Steps',
+                    ),
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: textMuted.withValues(alpha: 0.8),
                     ),
                   ),
                 ],

@@ -62,10 +62,8 @@ class ScanViewModel extends ChangeNotifier {
   String get currentServerUrl => _repository.currentServerUrl;
 
   Future<void> initThemeAndCms() async {
-    // Deteksi otomatis tema gelap/terang yang sedang dipakai oleh HP (OS Brightness)
-    final isSystemDark =
-        PlatformDispatcher.instance.platformBrightness == Brightness.dark;
-    _isDarkMode = isSystemDark;
+    // Default menggunakan Light Mode editorial SKINYLIST (pengguna dapat toggle kapan saja)
+    _isDarkMode = false;
     AppColors.isDark = _isDarkMode;
 
     // Muat bahasa tersimpan (ID / EN)

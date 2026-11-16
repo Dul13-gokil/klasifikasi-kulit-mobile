@@ -28,7 +28,7 @@ class ScanHistoryScreen extends StatelessWidget {
           children: [
             // Toolbar Header Riwayat Scan Pribadi
             Container(
-              padding: const EdgeInsets.fromLTRB(16, 10, 14, 10),
+              padding: const EdgeInsets.fromLTRB(16, 12, 14, 12),
               decoration: BoxDecoration(
                 color: AppColors.bgCard,
                 border: Border(
@@ -54,9 +54,9 @@ class ScanHistoryScreen extends StatelessWidget {
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w800,
+                            style: AppTheme.serif(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
                               color: AppColors.textMain,
                             ),
                           ),
@@ -64,20 +64,20 @@ class ScanHistoryScreen extends StatelessWidget {
                         const SizedBox(width: 7),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 7,
+                            horizontal: 8,
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
                             color: AppColors.bgSubtle,
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: AppColors.border),
+                            border: Border.all(color: AppColors.borderPink),
                           ),
                           child: Text(
                             '${items.length} ${AppStrings.tr("Data", "Scans")}',
                             style: AppTheme.mono(
                               fontSize: 10.5,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textMain,
+                              color: AppColors.accent,
                             ),
                           ),
                         ),
@@ -138,42 +138,42 @@ class ScanHistoryScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 60,
-              height: 60,
+              width: 64,
+              height: 64,
               decoration: BoxDecoration(
                 color: AppColors.bgSubtle,
                 shape: BoxShape.circle,
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: AppColors.borderPink, width: 1.4),
               ),
               child: Icon(
-                LucideIcons.history,
+                Icons.water_drop_outlined,
                 size: 28,
-                color: AppColors.textMuted,
+                color: AppColors.accent,
               ),
             ),
             const SizedBox(height: 14),
             Text(
               AppStrings.tr(
-                'Belum Ada Riwayat Scan Tersimpan',
+                'Belum Ada Riwayat Scan',
                 'No Saved Scan History Yet',
               ),
-              style: TextStyle(
-                fontSize: 15.5,
-                fontWeight: FontWeight.w800,
+              style: AppTheme.serif(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
                 color: AppColors.textMain,
               ),
             ),
             const SizedBox(height: 6),
             Text(
               AppStrings.tr(
-                'Lakukan pemindaian wajah pada menu Pindai Wajah lalu tekan tombol "Simpan Scan" untuk menyimpan hasil pemeriksaan dan rekomendasi perawatan di HP Anda.',
-                'Perform a facial scan in the Face Scan tab and tap "Save Scan" to store your examination results and skincare recommendations on this phone.',
+                'Lakukan cek kulit pada menu Cek Kulit lalu tekan tombol "Simpan Scan" untuk menyimpan hasil dan urutan skincare di HP Anda.',
+                'Check your skin in the Skin Check tab and tap "Save Scan" to store your results and skincare routine on this phone.',
               ),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12.5,
                 color: AppColors.textMuted,
-                height: 1.4,
+                height: 1.45,
               ),
             ),
           ],

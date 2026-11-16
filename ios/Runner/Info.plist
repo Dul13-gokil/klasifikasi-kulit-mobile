@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Klasifikasi Kulit</string>
+	<string>SKINYLIST</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Aplikasi membutuhkan akses kamera untuk mengambil foto wajah dan menganalisis kondisi kulit.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

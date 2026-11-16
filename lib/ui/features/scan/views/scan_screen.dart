@@ -265,14 +265,14 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
 
         return Column(
           children: [
-            // Area Viewfinder Kamera / Citra Tertangkap (Native Mobile Vertical Frame)
+            // Area Viewfinder Kamera / Foto Wajah
             Expanded(
               child: Container(
                 margin: const EdgeInsets.fromLTRB(14, 10, 14, 10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF020617),
+                  color: AppColors.bgSubtle,
                   borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: AppColors.border),
+                  border: Border.all(color: AppColors.borderPink, width: 1.2),
                 ),
                 clipBehavior: Clip.antiAlias,
                 child: Stack(
@@ -355,8 +355,8 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
                                               'FACE DETECTED',
                                             )
                                           : AppStrings.tr(
-                                              'CITRA SIAP',
-                                              'IMAGE READY',
+                                              'FOTO SIAP',
+                                              'PHOTO READY',
                                             ))
                                       : (_isCameraInitialized
                                           ? AppStrings.tr(
@@ -364,8 +364,8 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
                                               'CAMERA ACTIVE',
                                             )
                                           : AppStrings.tr(
-                                              'SIAP PINDAI',
-                                              'READY TO SCAN',
+                                              'SIAP CEK KULIT',
+                                              'READY TO CHECK',
                                             )),
                                   style: AppTheme.mono(
                                     fontSize: 10.5,
@@ -403,13 +403,13 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
                                         ? LucideIcons.crop
                                         : LucideIcons.maximize,
                                     color: widget.viewModel.cropFace
-                                        ? const Color(0xFF60A5FA)
+                                        ? AppColors.accent
                                         : Colors.white70,
                                     size: 13,
                                   ),
                                   const SizedBox(width: 5),
                                   Text(
-                                    'Auto-Crop: ${widget.viewModel.cropFace ? "ON" : "OFF"}',
+                                    '${AppStrings.tr("Fokus Wajah", "Face Focus")}: ${widget.viewModel.cropFace ? "ON" : "OFF"}',
                                     style: const TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,
@@ -432,26 +432,29 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const CircularProgressIndicator(
-                                color: Color(0xFF38BDF8),
+                              CircularProgressIndicator(
+                                color: AppColors.accent,
                               ),
                               const SizedBox(height: 14),
                               Text(
                                 AppStrings.tr(
                                   'Menganalisis Kondisi Kulit...',
-                                  'Analyzing Facial Skin Condition...',
+                                  'Analyzing Skin Condition...',
                                 ),
                                 style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 14,
+                                  fontSize: 14.5,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'MobileNetV2 • Server ${widget.viewModel.currentServerUrl}',
-                                style: AppTheme.mono(
-                                  fontSize: 11,
+                                AppStrings.tr(
+                                  'Mohon tunggu sebentar...',
+                                  'Please wait a moment...',
+                                ),
+                                style: const TextStyle(
+                                  fontSize: 11.5,
                                   color: Colors.white70,
                                 ),
                               ),
@@ -540,16 +543,9 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
                                   ),
                                 ),
                                 child: Container(
-                                  decoration: const BoxDecoration(
+                                  decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        AppColors.captureGreen,
-                                        AppColors.captureGreenDark,
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
+                                    color: AppColors.primary,
                                   ),
                                   child: const Icon(
                                     LucideIcons.camera,
@@ -679,48 +675,49 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: 64,
-              height: 64,
+              width: 68,
+              height: 68,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.06),
+                color: AppColors.bgCard,
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white12),
+                border: Border.all(color: AppColors.borderPink, width: 1.5),
               ),
-              child: const Icon(
+              child: Icon(
                 LucideIcons.camera,
-                color: Color(0xFF38BDF8),
+                color: AppColors.accent,
                 size: 30,
               ),
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             Text(
               AppStrings.tr(
-                'Pilih Sumber Citra Wajah',
-                'Select Facial Image Source',
+                'Pilih Cara Ambil Foto',
+                'Choose Photo Method',
               ),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16.5,
+              textAlign: TextAlign.center,
+              style: AppTheme.serif(
+                fontSize: 19,
                 fontWeight: FontWeight.w700,
+                color: AppColors.textMain,
               ),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 8),
             Text(
               _cameraInitError ??
                   AppStrings.tr(
-                    'Buka kamera langsung atau pilih berkas foto wajah dari galeri HP Anda.',
-                    'Open live camera or choose a facial photo from your phone gallery.',
+                    'Pakai kamera langsung atau pilih foto wajah dari galeri HP Anda.',
+                    'Use live camera or pick a facial photo from your phone gallery.',
                   ),
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Color(0xFF94A3B8),
+              style: TextStyle(
+                color: AppColors.textMuted,
                 fontSize: 12.5,
-                height: 1.4,
+                height: 1.45,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 22),
             if (_isStartingCamera)
-              const CircularProgressIndicator(color: Color(0xFF38BDF8))
+              CircularProgressIndicator(color: AppColors.accent)
             else
               Wrap(
                 spacing: 10,
@@ -729,7 +726,7 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
                 children: [
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.captureGreen,
+                      backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 18,
@@ -742,9 +739,9 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
                   ),
                   OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: const Color(0xFF1E293B),
-                      side: const BorderSide(color: Color(0xFF334155)),
+                      foregroundColor: AppColors.textMain,
+                      backgroundColor: AppColors.bgCard,
+                      side: BorderSide(color: AppColors.border),
                       padding: const EdgeInsets.symmetric(
                         horizontal: 18,
                         vertical: 12,
@@ -753,7 +750,7 @@ class _ScanScreenState extends State<ScanScreen> with WidgetsBindingObserver {
                     onPressed: () => _pickImage(ImageSource.gallery),
                     icon: const Icon(LucideIcons.image, size: 17),
                     label: Text(
-                      AppStrings.tr('Pilih Foto Galeri', 'Choose Gallery Photo'),
+                      AppStrings.tr('Pilih dari Galeri', 'Choose Gallery'),
                     ),
                   ),
                 ],

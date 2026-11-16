@@ -17,20 +17,36 @@ class AppTheme {
     );
   }
 
+  static TextStyle serif({
+    double fontSize = 20,
+    FontWeight fontWeight = FontWeight.w700,
+    Color? color,
+    double? height,
+    double? letterSpacing,
+  }) {
+    return GoogleFonts.playfairDisplay(
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: color ?? AppColors.textMain,
+      height: height,
+      letterSpacing: letterSpacing,
+    );
+  }
+
   static ThemeData get lightTheme => _buildTheme(isDark: false);
   static ThemeData get darkTheme => _buildTheme(isDark: true);
 
   static ThemeData _buildTheme({required bool isDark}) {
     final fontFamily = GoogleFonts.plusJakartaSans().fontFamily;
 
-    final bgApp = isDark ? const Color(0xFF090D16) : const Color(0xFFF8FAFC);
-    final bgCard = isDark ? const Color(0xFF111827) : const Color(0xFFFFFFFF);
-    final border = isDark ? const Color(0xFF283548) : const Color(0xFFE2E8F0);
-    final textMain = isDark ? const Color(0xFFF1F5F9) : const Color(0xFF0F172A);
+    final bgApp = isDark ? const Color(0xFF1E222B) : const Color(0xFFFFFFFF);
+    final bgCard = isDark ? const Color(0xFF262B36) : const Color(0xFFFFFFFF);
+    final border = isDark ? const Color(0xFF3C4354) : const Color(0xFFEAEAEA);
+    final textMain = isDark ? const Color(0xFFF3F4F6) : const Color(0xFF141414);
     final textSubtle =
-        isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8);
-    final primary = isDark ? const Color(0xFF2563EB) : const Color(0xFF0F172A);
-    final accent = isDark ? const Color(0xFF38BDF8) : const Color(0xFF2563EB);
+        isDark ? const Color(0xFF94A3B8) : const Color(0xFF8C8C8C);
+    final primary = isDark ? const Color(0xFFEC4899) : const Color(0xFFD6286C);
+    final accent = isDark ? const Color(0xFFF472B6) : const Color(0xFFD6286C);
 
     return ThemeData(
       useMaterial3: true,

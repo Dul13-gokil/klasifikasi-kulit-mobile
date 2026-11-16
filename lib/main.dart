@@ -68,9 +68,7 @@ class _SkinClassifierMobileAppState extends State<SkinClassifierMobileApp>
       listenable: widget.scanViewModel,
       builder: (context, _) {
         return MaterialApp(
-          title: widget.scanViewModel.isEnglish
-              ? 'Facial Skin Classification'
-              : 'Klasifikasi Kulit Wajah',
+          title: 'SKINYLIST',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
